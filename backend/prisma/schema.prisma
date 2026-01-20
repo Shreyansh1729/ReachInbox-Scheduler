@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  campaigns Campaign[]
+}
+
+model Campaign {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  name        String
+  scheduleAt  DateTime 
+  minDelay    Int      
+  hourlyLimit Int      
+  emails      Email[]
+  createdAt   DateTime @default(now())
+}
+
+model Email {
+  id           String   @id @default(uuid())
+  campaignId   String
+  campaign     Campaign @relation(fields: [campaignId], references: [id])
+  recipient    String
+  subject      String
+  body         String 
+  status       EmailStatus @default(PENDING) 
+  sentAt       DateTime?
+  bullMessageId String? 
+}
+
+enum EmailStatus {
+  PENDING
+  SENT
+  FAILED
+  THROTTLED
+}

@@ -23,40 +23,52 @@ Designed to handle high throughput, enforce rate limits, and survive server rest
 - **Frontend**: Next.js 14, Tailwind CSS, Tanstack Query, NextAuth.
 - **Infrastructure**: Docker Compose (Redis, Postgres).
 
-##  Quick Start
+## 🚀 How to Run locally
 
-### 1. Requirements
+### 1. Prerequisites
 - Node.js 18+
 - Docker & Docker Compose
 
-### 2. Setup
-
+### 2. Infrastructure (Redis & DB)
 ```bash
-# 1. Clone & Install
-cd assignment
-cd backend && npm install
-cd ../frontend && npm install
-
-# 2. Start Infrastructure (Redis & DB)
-cd ../backend
+cd backend
 docker-compose up -d
-
-# 3. Setup Database
 npx prisma db push
 npx prisma generate
-
-# 4. Start Backend Services
-# Terminal A (API)
-npm run dev:api
-
-# Terminal B (Worker)
-npm run dev:worker
-
-# 5. Start Frontend
-# Terminal C
-cd ../frontend
-npm run dev
 ```
+
+### 3. How to Run Backend
+The backend consists of two processes: the API Server and the Queue Worker.
+
+**Terminal A (API Server):**
+```bash
+cd backend
+npm install
+npm run dev:api
+# Runs on http://localhost:4000
+```
+
+**Terminal B (Worker):**
+```bash
+cd backend
+npm run dev:worker
+# Processes jobs from Redis
+```
+
+### 4. How to Run Frontend
+**Terminal C:**
+```bash
+cd frontend
+npm install
+npm run dev
+# Open http://localhost:3000
+```
+
+### 🛠 Debugging Tools
+**Reset Rate Limits:**
+If you get stuck with `THROTTLED` status during testing:
+`GET http://localhost:4000/api/debug/reset` (Resets all user quotas)
+
 
 ### 3. Testing the App
 1. Open `http://localhost:3000`.

@@ -53,7 +53,7 @@ app.get('/api/debug/queue', async (req, res) => {
     } catch (e) { res.status(500).json(e) }
 });
 
-app.delete('/api/debug/reset', async (req, res) => {
+app.get('/api/debug/reset', async (req, res) => {
     try {
         const { redisConnection } = require('./config/redis');
         const keys = await redisConnection.keys('limit:user:*');

@@ -55,6 +55,7 @@ export default function ComposePage() {
 
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+            console.log('🚀 Attempting to schedule with API URL:', apiUrl); // DEBUG LOG
             await axios.post(`${apiUrl}/api/schedule`, {
                 userId: user?.id,
                 ...data,

@@ -53,6 +53,15 @@ app.get('/api/debug/queue', async (req, res) => {
     } catch (e) { res.status(500).json(e) }
 });
 
+app.delete('/api/debug/reset', async (req, res) => {
+    try {
+        const { redisConnection } = require('./config/redis');
+        const keys = await redisConnection.keys('limit:user:*');
+        if (keys.length > 0) await redisConnection.del(keys);
+        res.json({ success: true, deleted: keys.length });
+    } catch (e) { res.status(500).json(e) }
+});
+
 app.listen(env.PORT, () => {
     console.log(`API Server running on port ${env.PORT}`);
 });

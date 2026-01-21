@@ -21,6 +21,20 @@ export class CampaignController {
             const data = ScheduleSchema.parse(req.body);
             const startTimeDate = data.startTime ? new Date(data.startTime) : new Date();
 
+            // 0. Ensure User Exists (Upsert)
+            // Validating that we have email if creating a new user (fallback)
+            const userEmail = req.body.userEmail || "unknown@example.com";
+
+            await prisma.user.upsert({
+                where: { id: data.userId },
+                update: {}, // No updates if exists
+                create: {
+                    id: data.userId,
+                    email: userEmail,
+                    name: "User"
+                }
+            });
+
             // 1. Create Campaign
             const campaign = await prisma.campaign.create({
                 data: {

@@ -58,6 +58,7 @@ export default function ComposePage() {
             console.log('🚀 Attempting to schedule with API URL:', apiUrl); // DEBUG LOG
             await axios.post(`${apiUrl}/api/schedule`, {
                 userId: user?.id,
+                userEmail: user?.email, // Required for backend to create user if missing
                 ...data,
                 recipients,
                 minDelay: Number(data.minDelay),

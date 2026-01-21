@@ -66,7 +66,7 @@ I see your screen! You are at the "New Project" menu. Follow this exact order:
     *   `NEXTAUTH_SECRET`: `any-random-secret-string`
     *   `GOOGLE_CLIENT_ID`: *Your Google ID*
     *   `GOOGLE_CLIENT_SECRET`: *Your Google Secret*
-    *   `API_URL`: **Paste the Backend Domain from Phase 2** (Start with `https://`)
+    *   `NEXT_PUBLIC_API_URL`: **Paste the Backend Domain from Phase 2** (Start with `https://`)
 7.  Go to **"Settings"** -> **"Networking"**.
 8.  Click **"Generate Domain"**.
 9.  **Copy this domain**.

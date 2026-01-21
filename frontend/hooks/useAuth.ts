@@ -2,8 +2,10 @@ import { useSession } from "next-auth/react";
 
 export function useAuth() {
     const { data: session } = useSession();
+    const user = session?.user as { id: string; name?: string; email?: string; image?: string } | undefined;
+
     return {
-        user: session?.user as { id?: string; name?: string; email?: string; image?: string } | undefined,
+        user,
         session,
     };
 }

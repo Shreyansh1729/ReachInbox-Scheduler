@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Papa from 'papaparse';
 import axios from 'axios';
+import { useAuth } from '@/hooks/useAuth';
 
 type FormValues = {
     subject: string;
@@ -16,7 +17,7 @@ type FormValues = {
 };
 
 export default function ComposePage() {
-    const { data: session } = useSession();
+    const { user, session } = useAuth();
     const router = useRouter();
     const [recipients, setRecipients] = useState<string[]>([]);
     const [isUploading, setIsUploading] = useState(false);
@@ -53,8 +54,9 @@ export default function ComposePage() {
         }
 
         try {
-            await axios.post('http://localhost:4000/api/schedule', {
-                userId: session?.user?.id,
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+            await axios.post(`${apiUrl}/api/schedule`, {
+                userId: user?.id,
                 ...data,
                 recipients,
                 minDelay: Number(data.minDelay),

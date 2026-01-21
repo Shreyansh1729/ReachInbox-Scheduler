@@ -32,7 +32,8 @@ export default function Dashboard() {
         queryKey: ['stats', user?.id],
         queryFn: async () => {
             if (!user?.id) return null;
-            const res = await axios.get(`http://localhost:4000/api/users/${user.id}/stats`);
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+            const res = await axios.get(`${apiUrl}/api/users/${user.id}/stats`);
             return res.data;
         },
         enabled: !!user?.id
@@ -42,7 +43,8 @@ export default function Dashboard() {
         queryKey: ['emails', user?.id],
         queryFn: async () => {
             if (!user?.id) return [];
-            const res = await axios.get(`http://localhost:4000/api/users/${user.id}/emails`);
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+            const res = await axios.get(`${apiUrl}/api/users/${user.id}/emails`);
             return res.data;
         },
         enabled: !!user?.id,

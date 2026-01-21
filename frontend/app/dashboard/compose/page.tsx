@@ -56,10 +56,17 @@ export default function ComposePage() {
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
             console.log('🚀 Attempting to schedule with API URL:', apiUrl); // DEBUG LOG
+
+            // Fix Timezone Issue: Convert local input time to UTC ISO string
+            const formattedStartTime = data.startTime
+                ? new Date(data.startTime).toISOString()
+                : undefined;
+
             await axios.post(`${apiUrl}/api/schedule`, {
                 userId: user?.id,
-                userEmail: user?.email, // Required for backend to create user if missing
+                userEmail: user?.email,
                 ...data,
+                startTime: formattedStartTime, // Override with UTC time
                 recipients,
                 minDelay: Number(data.minDelay),
                 hourlyLimit: Number(data.hourlyLimit)

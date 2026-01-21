@@ -27,26 +27,28 @@ export const emailWorker = new Worker<EmailJobData>(
 
         console.log(`[Job ${job.id}] Processing email to ${to} for user ${userId}`);
 
+        // 0. Idempotency Check: Prevent duplicate sends on retry
+        const existingEmail = await prisma.email.findUnique({ where: { id: emailId } });
+        if (existingEmail && existingEmail.status === 'SENT') {
+            console.log(`[Job ${job.id}] Skipped (Already SENT)`);
+            return;
+        }
+
         // 1. Check Rate Limit
         const limitStatus = await RateLimitService.checkLimit(userId, limitParams);
 
         if (!limitStatus.allowed) {
-            console.log(`[Job ${job.id}] Rate limit hit. Rescheduling in ${limitStatus.retryAfter}ms`);
-            // Update DB status
+            const delay = limitStatus.retryAfter || 60000;
+            console.log(`[Job ${job.id}] ⏳ Rate limit hit. Rescheduling in ${delay}ms`);
+
+            // Update DB status to THROTTLED so UI knows
             await prisma.email.update({
                 where: { id: emailId },
                 data: { status: 'THROTTLED' }
             });
 
-            // Move to delayed
-            await job.moveToDelayed(Date.now() + (limitStatus.retryAfter || 60000), job.token); // this requires token
-            // Actually, inside a worker, throwing an error or using moveToDelayed is tricky. 
-            // The best way for 'rate limited' is to throw a specific error that causes a delay, 
-            // OR return and let the caller handle it. 
-            // But throwing `Worker.RateLimitError` is standard for "try again later".
-            // However, we want SPECIFIC delay.
-            // `moveToDelayed` needs the token which is available on the job.
-            // We will return here to stop processing.
+            // Re-queue the job efficiently
+            await job.moveToDelayed(Date.now() + delay, job.token);
             return;
         }
 

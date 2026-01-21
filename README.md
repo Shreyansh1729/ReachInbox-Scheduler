@@ -83,6 +83,9 @@ npm run dev
 ### Persistence Strategy
 - **Redis AOF** (`appendonly yes`): Ensures queue state is saved to disk immediately. If Docker crashes, the queue restores perfectly on restart.
 - **Postgres**: Permanent record of campaign history and status.
+- **Idempotency**:
+  - **Job IDs**: Derived from Email ID (`email-${id}`) to prevent duplicate queuing.
+  - **Worker Check**: The worker checks the DB (`email.status === 'SENT'`) *before* sending to ensure no double-sends occur even if a job is retried after a crash.
 
 ##  Configuration (.env)
 

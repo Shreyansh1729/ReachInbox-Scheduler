@@ -12,11 +12,14 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Generate Prisma Client
+RUN npx prisma generate
+
 # Build TypeScript
 RUN npm run build
 
 # Expose API port
 EXPOSE 4000
 
-# Start command (can be overridden by docker-compose or Railway)
-CMD ["npm", "run", "start"]
+# Start command (Run migrations then start)
+CMD ["sh", "-c", "npx prisma db push && npm run start"]

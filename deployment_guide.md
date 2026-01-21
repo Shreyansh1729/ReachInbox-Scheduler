@@ -75,28 +75,31 @@ I see your screen! You are at the "New Project" menu. Follow this exact order:
 
 ---
 
-## 🚨 CRITICAL FIXES (Check these now!)
+## 🚨 FINAL CHECKLIST (Follow these exactly)
 
-If you see "Application failed to respond" or "Crashed":
+The "Failed to schedule" error means the Frontend can't find the Backend. Check these 3 settings:
 
-### FIX 1: The Worker Role
-Your **Worker service** (e.g. `vivacious-simplicity`) is likely running the API by mistake.
-1.  Go to the **Worker service** -> **Settings** -> **Build**.
-2.  Find **Start Command**.
-3.  Type: `npm run start:worker` (Must do this or it won't send emails!).
+### 1. Fix the Worker (`vivacious-simplicity`)
+You put the command in the wrong box!
+1.  Go to `vivacious-simplicity` -> **Settings** -> **Build**.
+2.  **DELETE** everything from the **"Build Command"** box (it should be empty).
+3.  Scroll down to the **"Deploy"** section.
+4.  Find the **"Start Command"** box and type: `npm run start:worker`
+5.  Click **Save**.
 
-### FIX 2: The Port Mismatch
-If the **Frontend** shows "Failed to respond" but the logs say "Ready":
-1.  Go to **Frontend service** -> **Deploy Logs**.
-2.  Look for "Local: http://localhost:XXXX". **Note that number (likely 8080)**.
-3.  Go to **Settings** -> **Networking**.
-4.  Find the **"Port"** field.
-5.  Change it to match the number from the logs (e.g., `8080`).
-6.  **Do the same for the Backend service.**
+### 2. Match the Ports (Important!)
+Railway uses port **8080** by default, but it might be trying to find your app on 3000.
+1.  Go to **Frontend** (`rare-endurance`) -> **Settings** -> **Networking**.
+2.  Find the **"Port"** field. Change it to **`8080`**. (Save)
+3.  Go to **Backend** (`ReachInbox-Scheduler`) -> **Settings** -> **Networking**.
+4.  Find the **"Port"** field. Change it to **`8080`**. (Save)
 
-### FIX 3: Frontend Environment Variable
-Make sure your Frontend's `NEXT_PUBLIC_API_URL` starts with `https://`.
-(e.g., `https://reachinbox-scheduler-production.up.railway.app`)
+### 3. Verify the Frontend Variable
+1.  Go to **Frontend** (`rare-endurance`) -> **Variables**.
+2.  Ensure you have **`NEXT_PUBLIC_API_URL`** (Must be this name!).
+3.  Value MUST be the full backend URL: `https://reachinbox-scheduler-production.up.railway.app`
+    *   **NO** slash at the end.
+    *   **MUST** start with `https://`.
 
 ---
 

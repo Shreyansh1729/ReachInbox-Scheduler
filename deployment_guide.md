@@ -75,8 +75,28 @@ I see your screen! You are at the "New Project" menu. Follow this exact order:
 
 ---
 
-## 🎉 Final Step
-Update your **Google Cloud Console** with the new Frontend Domain for "Authorized Origins" and "Redirect URIs".
+## 🚨 CRITICAL FIXES (Check these now!)
+
+If you see "Application failed to respond" or "Crashed":
+
+### FIX 1: The Worker Role
+Your **Worker service** (e.g. `vivacious-simplicity`) is likely running the API by mistake.
+1.  Go to the **Worker service** -> **Settings** -> **Build**.
+2.  Find **Start Command**.
+3.  Type: `npm run start:worker` (Must do this or it won't send emails!).
+
+### FIX 2: The Port Mismatch
+If the **Frontend** shows "Failed to respond" but the logs say "Ready":
+1.  Go to **Frontend service** -> **Deploy Logs**.
+2.  Look for "Local: http://localhost:XXXX". **Note that number (likely 8080)**.
+3.  Go to **Settings** -> **Networking**.
+4.  Find the **"Port"** field.
+5.  Change it to match the number from the logs (e.g., `8080`).
+6.  **Do the same for the Backend service.**
+
+### FIX 3: Frontend Environment Variable
+Make sure your Frontend's `NEXT_PUBLIC_API_URL` starts with `https://`.
+(e.g., `https://reachinbox-scheduler-production.up.railway.app`)
 
 ---
 

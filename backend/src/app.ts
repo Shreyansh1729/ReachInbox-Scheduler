@@ -45,6 +45,14 @@ app.post('/api/users', async (req, res) => {
     } catch (e) { res.status(400).json(e) }
 });
 
+app.get('/api/debug/queue', async (req, res) => {
+    try {
+        const { emailQueue } = require('./jobs/queues');
+        const counts = await emailQueue.getJobCounts();
+        res.json(counts);
+    } catch (e) { res.status(500).json(e) }
+});
+
 app.listen(env.PORT, () => {
     console.log(`API Server running on port ${env.PORT}`);
 });
